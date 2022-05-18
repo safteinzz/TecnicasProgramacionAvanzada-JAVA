@@ -1,0 +1,26 @@
+Ejercicio 1. Un estudiante se presenta con prisa a un examen, por lo que ha decidido que va a intentar
+obtener un aprobado (no necesariamente un 5 justo) en el menor tiempo posible. Para ello, hace una
+primera lectura rápida de los problemas y le asocia a cada uno una estimación del número de minutos
+que tardará en solucionarlo. Teniendo en cuenta que la puntuación de cada problema es conocida,
+explicar el enfoque y diseñar en pseudocódigo un algoritmo voraz para determinar en qué preguntas
+debe elegir. Determinar, de manera justificada, la complejidad del algoritmo.
+
+
+funcion aprobar(P: lista reales, T: lista reales): lista enteros
+	S: lista enteros
+	PT: lista reales
+	nota = 0: entero 
+	
+	para i..1 hasta n --Sacar relacion punto - tiempo
+	hacer
+		PT[i] = P[i] / T[i] 
+		
+	ordenar(PT, P, T) --Ordena PT, P y T de manera decreciente en base a los valores de PT
+	
+	i = 0: entero 
+	mientras nota < 5
+	hacer --Hacer el ejercicio mas rentable y sumarle su nota hasta que pasemos del 5
+		S[i] = 1
+		nota += P[i]
+	
+	devolver S

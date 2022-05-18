@@ -1,0 +1,36 @@
+Ejercicio 2. Un vidente famoso acaba de montar una consulta donde adivinar el futuro de sus clientes.
+Ofrece tres tipos de servicio: adivinación mediante el tarot (50€ la consulta), lectura de la mano (30 €) y
+bola de cristal (40 €). Después de un par de semanas, el número de personas que quiere acudir a él es
+mayor que el número de personas que puede atender a diario, razón por la cual está intentando buscar
+un método que le ayude a decidir qué clientes atender cada día. Teniendo en cuenta que, por persona,
+dedica 30 minutos al tarot, 20 minutos a la lectura de la mano y 25 minutos a la bola de cristal, diseñar
+un algoritmo voraz que maximice los beneficios diarios en términos económicos, y determinar la
+complejidad de forma razonada.
+Nota: la función debe recibir como entrada el número de horas que dedicará en el día a
+atender clientes, los precios de cada tipo de consulta y el tiempo que dedica a cada una.
+Nota 2: en el caso en que la última cita exceda el tiempo restante, el vidente no tiene problema
+en finalizarla.
+
+tarot 50€ 30min
+leer mano 30€ 20min
+bola crista 40€ 25min
+
+funcion rentabilidadTarot(HorasDiarias: entero, P: lista reales, T: lista enteros): lista enteros
+	S: lista enteros
+	PT: lista reales
+	
+	para i..1 hasta n ;Sacar relacion precio - tiempo
+	hacer
+		PT[i] = P[i] / T[i] 
+		
+	ordenar(PT, P, T) --Ordena PT, P y T de manera decreciente en base a los valores de PT
+	
+	totalHorasJornada = 0: entero
+	i = 0: entero
+	
+	mientras totalHorasJornada < HorasDiarias
+	hacer
+		S[i] = 1
+		totalHorasJornada += T[i]
+	
+	devolver S

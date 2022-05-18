@@ -1,0 +1,73 @@
+Ejercicio 3. Nos han encargado mejorar la eficiencia de una red de ordenadores de área local. En esta
+red existen líneas con diferentes anchos de banda y con diferentes cargas de datos. Nuestra estrategia
+va a consistir en identificar el conjunto mínimo de líneas que deberíamos sustituir por otras con mayor
+ancho de banda, de manera que siempre exista camino mejorado entre cualquier par de ordenadores
+del área. La buena noticia es que no tenemos restricciones presupuestarias, siempre y cuando se
+mejoren únicamente el número mínimo de líneas necesario. Explicar el enfoque y diseñar en
+pseudocódigo un algoritmo que determine el conjunto de líneas que cumple las restricciones.
+Determinar, de manera justificada, la complejidad de la función.
+
+Planteamiento:
+
+Hay que sumar el total de ancho de banda de todas las lineas al destino y dividirlo entre el total
+de lineas para sacar el ancho de banda de media para determinar si es el mejor camino.
+
+Hay que tomar en consideración que al tener carga de datos un camino optimo saturado al 100%
+va a ser peor que uno menos optimo sin saturar
+
+Por lo tanto voy a suponer que la arista contiene un atributo saturación que va de 0 a 1 (real) para
+multiplicar el valor el ancho de banda por (1 - saturación) para obtener la velocidad de transimision 
+de cada linea para averiguar cual es la mejor linea
+
+Voy a suponer tambien que hay un metodo get en las aristas que haga lo siguiente:
+getEficiencia()
+ retornar arista.anchoBanda * (1 - arista.saturacion)
+De modo que si tengo dos posibles aristas: 
+una a 100MB/s con un 90% de saturacion -> 100 * (1 - 0.9) = 10 -> Este seria peor camino
+otra a 20MB/s con un 10% de saturacion -> 20  * (1 - 0.1) = 18 -> Este seria mejor camino
+
+Además al tratarse de una red todos los nodos estaran siempre conectados por ende
+no se necesita que el codigo sepa buscar nodos no conectados
+
+Pre-pseudocodigo:
+
+1. Cojer un vertice V del grafo
+2. Meter el vertice V en una lista de visitados LV
+	Bucle mientras listaVisitados.len sea mas pequeña que grafo.totalVertices
+		3. Meter las aristas de V que no esten en la lista de mejores aristas en una lista LA
+		Bucle LA
+			4.Iterar LA utilizando getEficiencia para obtener la arista mas eficiente
+		5.Sacar esa arista de la lista
+		6.Meter esa arista en una listaAristasReturn que sera la que sea retornada
+		7.Cojer el vertice del otro extremo de esa arista y setear V a el
+	8.Borrar del grafo todos las aristas que no estan en listaAristasReturn
+	9.Retornar grafo
+
+
+Pseudocodigo:
+		
+funcion mejorarEficienciaRed (grafo: objeto grafo): grafo
+	LV : lista vertices --Vertices sin visitar
+	LA : lista aristas --Aristas sin visitar de vertices visitados
+	LBA : lista aristas --Mejores aristas para el grafo
+	grafoReturn : grafo
+	
+	v = grafo.getVertice(0) : Vertice
+	
+	mientras LV.length < grafo.totalVertices --Mientras que no se hayan visitado todos los vertices
+	hacer
+		LA.agregar(v.getAristas())
+		bestArista = LA[0] : Arista --Aqui se guardara la mas eficiente, 
+									--la inicio con la primera de la lista para que se pueda comparar
+		para cada aristaIter: Arista.. dentro de LA
+			si aristaIter.getEficiencia() > bestArista.getEficiencia
+				bestArista = aristaIter
+		
+		LA.borrar(bestArista) --Borrar de la lista de aristas para mirar la arista que hemos seleccionado
+		LBA.agregar(bestArista) --Meter la arista selecciona a la lista de mejores aristas
+		LV.agregar(v) --Meter v como vertice visitado
+		v = bestArista.getElOtroExtremo() --Cojer el vertice del otro extremo para meter sus aristas
+		v.borrarAristas(LBA) --Borrar aristas ya utilizadas para que no se agreguen
+	
+	grafoReturn = grafo.borrarAristasQueNoSean(LBA) --Borrar aristas que no sean las de LBA
+	retornar grafoReturn
